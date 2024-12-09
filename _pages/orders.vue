@@ -38,7 +38,7 @@ export default {
       loading: false,
       listConfig: {
         apiRoute: 'apiRoutes.qorder.items',
-        permission: 'iorder.orders.manage',
+        //permission: 'iorder.orders.manage',
         pageActions: {
           extraActions: ['search', 'new','export']
         },
