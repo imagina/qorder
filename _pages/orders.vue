@@ -7,7 +7,7 @@
     </div>
 
     <!-- crud form -->
-    <crud ref="crudComponent" :type="null" :crud-data="import('modules/qtask/_crud/tasks')"
+    <crud ref="crudComponent" :type="null" :crud-data="import('modules/qorder/_crud/orders')"
       @created="refreshDynamicList()" @updated="refreshDynamicList()" @deleted="refreshDynamicList()" />
 
     <inner-loading :visible="loading" />
@@ -37,16 +37,15 @@ export default {
       },
       loading: false,
       listConfig: {
-        //apiRoute: 'apiRoutes.qorder.orders',
-        apiRoute: 'https://nflow3.imaginacolombia.com/webhook/waruwa-orders',
-        permission: '',
+        apiRoute: 'apiRoutes.qorder.items',
+        permission: 'iorder.orders.manage',
         pageActions: {
-          extraActions: ['search', 'new', 'export']
+          extraActions: ['search', 'new','export']
         },
         read: {
           title: this.$tr('iorder.cms.orderManagement'),
           tableProps: {
-          },
+          },          
           columns: [
             {
               name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
@@ -58,108 +57,109 @@ export default {
               onClick: (val, row) => this.openShowModal(row)
             },
             {
-              name: 'providerName', label: 'Proveedor', field: 'providerName',
+              name: 'suppliers', label: 'Proveedor', field: 'suppliers',
               align: 'center', style: 'max-width: 250px',
-              format: (val) => val ? val : '-'              
-            },
-            /* providerPrice */
-            {
-              name: 'providerPrice', label: '$ Proveedor', field: 'providerPrice', align: 'center',
-              //format: (val, row) => row?.status ? row.status.title : '---',              
-              contentType: (row) => {
-                return {
-                  template: 'status',
-                  props: {
-                    label:  `$${row.providerPrice.value}`,
-                    color: row.providerPrice.color,
-                    icon: row.providerPrice.icon
-                  }
-                }              
+              format: (val) => {                
+                const result = []
+                val.forEach(item => {
+                  let label =  `${item.supplier?.firstName || ''} ${item.supplier?.lastName || ''}`
+                  if(!label.length) label = item.supplier.email
+                  result.push(label)
+                });
+
+                return result.join(', ')
               },
               dynamicField: {
                 type: 'select',
                 
                 props: {
-                  label: this.$tr('isite.cms.form.status'),
+                  label: 'Proveedor',
                   useInput: true,
                   rules: [
                     val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
                   ]
                 },
                 loadOptions: {
-                  //apiRoute: 'apiRoutes.qproduct.statuses',
-                  apiRoute: 'https://nflow3.imaginacolombia.com/webhook/waruwa-status',
+                  apiRoute: 'apiRoutes.quser.users',
                   select: {
-                    label: 'title',
+                    label: item => `${item.firstName} ${item.lastName}`,
                     id: item => `${item.id}`
                   }
                 }
               }
             },
+            /* providerPrice */            
+            {
+              name: 'providerPrice', label: '$ Proveedor', field: 'suppliers', align: 'center',
+              format: (val) => {                
+                const result = []
+                val.forEach(item => {                  
+                  if(item.price) result.push(`$${item.price}`)
+                });
+                return result.join(', ')
+              },
+            },
+            
             /* price */
             {
               name: 'price', label: '$ Waruwa', field: 'price', align: 'center',
-              //format: (val, row) => row?.status ? row.status.title : '---',              
-              contentType: (row) => {
+              format: (val) => `$${val}` || '-',
+              contentType: (row) => {                
+                let icon = ''
+                row.suppliers.forEach(item => {
+                  if(item.price > row.price) icon = 'fa-light fa-triangle-exclamation' 
+                });
                 return {
                   template: 'status',
                   props: {
-                    label:  `$${row.price}`
-                  }
-                }              
-              },
-              dynamicField: {
-                type: 'select',
-                
-                props: {
-                  label: this.$tr('isite.cms.form.status'),
-                  useInput: true,
-                  rules: [
-                    val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
-                  ]
-                },
-                loadOptions: {
-                  apiRoute: 'apiRoutes.qproduct.statuses',
-                  select: {
-                    label: 'title',
-                    id: item => `${item.id}`
-                  }
-                }
-              }
-            },
-            /* units */
-            {
-              name: 'units', label: 'Unidades Sol/Disp', field: 'units', align: 'center',
-              //format: (val, row) => row?.status ? row.status.title : '---',              
-              contentType: (row) => {
-                return {
-                  template: 'status',
-                  props: {
-                    label:  `${row.units.requested}/${row.units.avaliable}`,
+                    label:  `$${row.price}`,
                     color: '#FF8C00',
-                    icon: row.units.requested > row.units.avaliable ? 'fa-light fa-triangle-exclamation' : ''
+                    icon
                   }
                 }              
               },
-              dynamicField: {
-                type: 'select',
-                
+              dynamicField: {                
+                type: 'input',
                 props: {
-                  label: this.$tr('isite.cms.form.status'),
-                  useInput: true,
+                  label: `${this.$tr('isite.cms.form.price')}*`,
                   rules: [
-                    val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
-                  ]
+                    val => !!val || this.$tr('isite.cms.message.fieldRequired')
+                  ],
                 },
-                loadOptions: {
-                  apiRoute: 'apiRoutes.qproduct.statuses',
-                  select: {
-                    label: 'title',
-                    id: item => `${item.id}`
-                  }
-                }
               }
             },
+          
+            /* quantity: */
+           /* add all amounts through suppliers */
+            {
+              name: 'quantity', label: 'Unidades Sol/Disp', field: 'quantity', align: 'center',
+              contentType: (row) => {                
+                let quantity = 0
+                row.suppliers.forEach(item => {
+                  quantity += item.quantity
+                })
+
+                const icon = row.quantity > quantity ? 'fa-light fa-triangle-exclamation' : ''
+                return {
+                  template: 'status',
+                  props: {
+                    label:  `${row.quantity}/${quantity}`,
+                    color: '#FF8C00',
+                    icon                
+                  }
+                }              
+              },
+              dynamicField: {                
+                type: 'input',
+                props: {
+                  label: `${this.$tr('isite.cms.form.units')}*`,
+                  rules: [
+                    val => !!val || this.$tr('isite.cms.message.fieldRequired')
+                  ],
+                },
+              }
+            },
+            
             /* status */
             {
               name: 'status', label: this.$tr('isite.cms.form.status'), field: 'status', align: 'center', style: 'width: 250px',
@@ -173,24 +173,25 @@ export default {
                     icon: row.status.icon
                   }
                 }              
-              },
+              },              
               dynamicField: {
                 type: 'select',
                 
                 props: {
                   label: this.$tr('isite.cms.form.status'),
-                  useInput: true,
                   rules: [
                     val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
                   ]
                 },
                 loadOptions: {
-                  //apiRoute: 'apiRoutes.qproduct.statuses',
-                  apiRoute: 'https://nflow3.imaginacolombia.com/webhook/waruwa-status',
+                  apiRoute: 'apiRoutes.qorder.statuses',
+                  requestParams: {
+                    filter: {groupId:2}
+                  },
                   select: {
                     label: 'title',
                     id: item => `${item.id}`
-                  }
+                  }                  
                 }
               }
             },
@@ -201,14 +202,16 @@ export default {
               align: 'center'
             }
           ],
-          requestParams: {},
+          requestParams: {
+            include: 'suppliers.supplier',
+          },
           filters: {
-            product: {
+            order: {
               value: [],
               type: 'select',
               quickFilter: true,
               props: {
-                label: 'product',
+                label: "",
                 //multiple: true,
                 //useChips: true,
                 useInput: true,
@@ -217,13 +220,14 @@ export default {
                 ],
               },
               loadOptions: {
-                apiRoute: 'apiRoutes.quser.users',              
+                apiRoute: 'apiRoutes.qorder.orders',
                 select: {
-                  label: 'email',
-                  id: item => `${item.id}`                
+                  label: item => `${item.id} - ${item.createdAt}`,
+                  id: item => `${item.id}`
                 }
               }
             },
+            /*
             provider: {
               value: [],
               type: 'select',
@@ -245,6 +249,7 @@ export default {
                 }
               }
             },
+            */
             createdAt: {
               value: '',
               quickFilter: true,                          
@@ -253,6 +258,7 @@ export default {
                 label: this.$tr('isite.cms.form.createdAt')
               }
             },
+            /*
             status: {
               value: [],
               type: 'select',
@@ -275,6 +281,7 @@ export default {
                 }
               }
             },
+            */
           },
 
           help: {

@@ -1,7 +1,7 @@
 
 export default {
   orders: {
-    //permission: 'iorder.orders.manage',
+    permission: 'iorder.orders.manage',
     activated: true,
     authenticated: true,
     path: '/orders/orders/index',
