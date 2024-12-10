@@ -7,9 +7,14 @@
     </div>
 
     <!-- crud form -->
-    <crud ref="crudComponent" :type="null" :crud-data="import('modules/qorder/_crud/orders')"
-      @created="refreshDynamicList()" @updated="refreshDynamicList()" @deleted="refreshDynamicList()" />
-
+    <crud 
+      v-if="false"
+      ref="crudComponent" 
+      :type="null" 
+      :crud-data="import('modules/qorder/_crud/orders')"
+      @created="refreshDynamicList()" 
+      @updated="refreshDynamicList()" 
+      @deleted="refreshDynamicList()" />
     <inner-loading :visible="loading" />
   </div>
 </template>
@@ -40,7 +45,7 @@ export default {
         apiRoute: 'apiRoutes.qorder.items',
         //permission: 'iorder.orders.manage',
         pageActions: {
-          extraActions: ['search', 'new','export']
+          extraActions: ['search', 'export']
         },
         read: {
           title: this.$tr('iorder.cms.orderManagement'),
@@ -49,12 +54,12 @@ export default {
           columns: [
             {
               name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
-              onClick: (val, row) => this.openShowModal(row)
+              //onClick: (val, row) => this.openShowModal(row)
             },
             {
               name: 'title', label: 'Producto', field: 'title',
               align: 'left', style: 'max-width: 250px',
-              onClick: (val, row) => this.openShowModal(row)
+              format: (val) => val || '-',
             },
             {
               name: 'suppliers', label: 'Proveedor', field: 'suppliers',
@@ -69,6 +74,7 @@ export default {
 
                 return result.join(', ')
               },
+              /*
               dynamicField: {
                 type: 'select',
                 props: {
@@ -87,6 +93,7 @@ export default {
                   }
                 }
               }
+              */
             },
             /* providerPrice */            
             {
@@ -118,6 +125,7 @@ export default {
                   }
                 }              
               },
+              /*
               dynamicField: {
                 type: 'input',
                 props: {
@@ -127,6 +135,7 @@ export default {
                   ],
                 },
               }
+                */
             },
           
             /* quantity: */
@@ -149,6 +158,7 @@ export default {
                   }
                 }              
               },
+              /*
               dynamicField: {
                 type: 'input',
                 props: {
@@ -158,6 +168,7 @@ export default {
                   ],
                 },
               }
+                */
             },
             
             /* status */
@@ -200,27 +211,26 @@ export default {
             },
             /* observations */
             {name: 'observations', label: this.$tr('isite.cms.form.observations'), field: 'observations', align: 'center', style: 'width: 200px'},
+            /*
             {
               name: 'actions', label: this.$tr('isite.cms.form.actions'),
               align: 'center'
             }
+              */
           ],
           requestParams: {
             include: 'suppliers.supplier',
           },
           filters: {
-            order: {
+            orderId: {
               value: [],
               type: 'select',
               quickFilter: true,
               props: {
-                label: "",
+                label: "Order",
                 //multiple: true,
                 //useChips: true,
-                useInput: true,
-                rules: [
-                  val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
-                ],
+                clearable: true,
               },
               loadOptions: {
                 apiRoute: 'apiRoutes.qorder.orders',
@@ -230,61 +240,55 @@ export default {
                 }
               }
             },
-            /*
-            provider: {
+            
+            suppliers: {
               value: [],
               type: 'select',
               quickFilter: true,
               props: {
-                label: 'provider',
-                //multiple: true,
+                label: 'suppliers',
+                multiple: true,
                 //useChips: true,
                 useInput: true,
-                rules: [
-                  val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
-                ],
+                clearable: true,
               },
               loadOptions: {
-                apiRoute: 'apiRoutes.quser.users',              
+                apiRoute: 'apiRoutes.quser.users',
+                filterByQuery: true,
                 select: {
                   label: 'email',
                   id: item => `${item.id}`                
                 }
               }
-            },
-            */
-            createdAt: {
-              value: '',
-              quickFilter: true,                          
-              type: 'date',
-              props: {
-                label: this.$tr('isite.cms.form.createdAt')
-              }
-            },
-            /*
-            status: {
-              value: [],
+            },            
+
+            statusId: {
               type: 'select',
+              name: 'statusId',
               quickFilter: true,
               props: {
-                label: 'status',
-                //multiple: true,
-                //useChips: true,
+                label: this.$tr('isite.cms.form.status'),
                 useInput: true,
+                clearable: true,
                 rules: [
                   val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
-                ],
+                ]
               },
-              loadOptions: {                
-                //apiRoute: 'apiRoutes.quser.users',
-                apiRoute: 'https://nflow3.imaginacolombia.com/webhook/waruwa-status',
+              loadOptions: {
+                apiRoute: 'apiRoutes.qorder.statuses',
+                requestParams: {
+                  filter: {
+                    groupId: '2'
+                  }
+                },
                 select: {
                   label: 'title',
-                  id: item => `${item.id}`                
+                  id: item => `${item.id}`
                 }
               }
-            },
-            */
+            }          
+            
+            
           },
 
           help: {
@@ -293,6 +297,7 @@ export default {
           }
 
         },
+        /*
         actions: [
           {//show action
             icon: 'fa-light fa-eye',
@@ -319,6 +324,7 @@ export default {
             }
           }
         ]
+          */
       }
     };
   },
