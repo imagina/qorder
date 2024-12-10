@@ -12,7 +12,7 @@ export default {
       return {
         crudId: this.crudId,
         entityName: config("main.qorder.entityNames.orders"),
-        apiRoute: 'apiRoutes.qorder.orders',
+        apiRoute: 'apiRoutes.qorder.items',
         permission: 'iorder.orders',
         create: {
           title: this.$tr('iorder.cms.newOrder'),
@@ -43,7 +43,7 @@ export default {
               ],
             },
           },
-          provider: {
+          suppliers: {
             type: 'select',
             props: {
               label: 'Proveedor',
