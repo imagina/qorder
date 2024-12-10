@@ -43,11 +43,66 @@ export default {
               ],
             },
           },
-          
-         
+          provider: {
+            type: 'select',
+            props: {
+              label: 'Proveedor',
+              useInput: true,
+              rules: [
+                val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
+              ]
+            },
+            loadOptions: {
+              apiRoute: 'apiRoutes.quser.users',
+              filterByQuery: true,
+              select: {
+                label: item => `${item.firstName} ${item.lastName}`,
+                id: item => `${item.id}`
+              }
+            }
+          }, 
+          price: {
+            type: 'input',
+            props: {
+              label: `${this.$tr('isite.cms.form.price')}*`,
+              rules: [
+                val => !!val || this.$tr('isite.cms.message.fieldRequired')
+              ],
+            },
+          }
         },
         formRight: {
-          /* status */          
+          quantity: {
+            type: 'input',
+            props: {
+              label: `${this.$tr('isite.cms.form.units')}*`,
+              rules: [
+                val => !!val || this.$tr('isite.cms.message.fieldRequired')
+              ],
+            },
+          }, 
+          statusId: {
+            type: 'select',
+            props: {
+              label: this.$tr('isite.cms.form.status'),
+              useInput: true,
+              rules: [
+                val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
+              ]
+            },
+            loadOptions: {
+              apiRoute: 'apiRoutes.qorder.statuses',
+              requestParams: {
+                filter: {
+                  groupId: '2'
+                }
+              },
+              select: {
+                label: 'title',
+                id: item => `${item.id}`
+              }
+            }
+          }
         },
       }
     },

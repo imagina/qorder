@@ -63,7 +63,7 @@ export default {
                 const result = []
                 val.forEach(item => {
                   let label =  `${item.supplier?.firstName || ''} ${item.supplier?.lastName || ''}`
-                  if(!label.length) label = item.supplier.email
+                  if(label.length < 4) label = item.supplier.email
                   result.push(label)
                 });
 
@@ -71,7 +71,6 @@ export default {
               },
               dynamicField: {
                 type: 'select',
-                
                 props: {
                   label: 'Proveedor',
                   useInput: true,
@@ -81,6 +80,7 @@ export default {
                 },
                 loadOptions: {
                   apiRoute: 'apiRoutes.quser.users',
+                  filterByQuery: true,
                   select: {
                     label: item => `${item.firstName} ${item.lastName}`,
                     id: item => `${item.id}`
@@ -118,7 +118,7 @@ export default {
                   }
                 }              
               },
-              dynamicField: {                
+              dynamicField: {
                 type: 'input',
                 props: {
                   label: `${this.$tr('isite.cms.form.price')}*`,
@@ -149,7 +149,7 @@ export default {
                   }
                 }              
               },
-              dynamicField: {                
+              dynamicField: {
                 type: 'input',
                 props: {
                   label: `${this.$tr('isite.cms.form.units')}*`,
@@ -176,9 +176,10 @@ export default {
               },              
               dynamicField: {
                 type: 'select',
-                
+                name: 'statusId',
                 props: {
                   label: this.$tr('isite.cms.form.status'),
+                  useInput: true,
                   rules: [
                     val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
                   ]
@@ -186,12 +187,14 @@ export default {
                 loadOptions: {
                   apiRoute: 'apiRoutes.qorder.statuses',
                   requestParams: {
-                    filter: {groupId:2}
+                    filter: {
+                      groupId: '2'
+                    }
                   },
                   select: {
                     label: 'title',
                     id: item => `${item.id}`
-                  }                  
+                  }
                 }
               }
             },
