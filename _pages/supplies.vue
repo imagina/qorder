@@ -78,14 +78,14 @@ export default {
 							{
 								name: 'requestedQuantity', label: this.$tr('iorder.cms.form.requestedQuantity'), field: 'item', align: 'center',
 								icon: 'fa-regular fa-boxes-stacked',
-								format: val => `<span class="q-ml-lg">${val.quantity}</span>`
+								format: val => `<span class="q-ml-md">${val.quantity}</span>`
 							},
 
 							/* quantity: */
 							{
 								name: 'quantity', label: this.$tr('iorder.cms.form.avaliableQuantity'), field: 'quantity', align: 'center',
 								icon: 'fa-regular fa-boxes-stacked',
-								format: val => `<span class="q-ml-lg">${val}</span>`,
+								format: val => `<span class="q-ml-md">${val}</span>`,
 								dynamicField: row => {
 									return {
 										vIf: row.statusId == SUPPLY_STATUSES.SUPPLY_PENDING,
@@ -100,7 +100,7 @@ export default {
 							/* comment */
 							{ name: 'comment', label: this.$tr('iorder.cms.form.observations'), field: 'comment', align: 'center',
 								icon: 'fa-regular fa-comment-dots',
-								format: val =>  val ? `<span class="q-ml-lg">${val}</span>` : `<span class="q-ml-lg">-</span>`,
+								format: val =>  val ? `<span class="q-ml-md">${val}</span>` : `<span class="q-ml-lg">-</span>`,
 								dynamicField: row => {
 									return {
 										vIf: row.statusId == SUPPLY_STATUSES.SUPPLY_PENDING,
