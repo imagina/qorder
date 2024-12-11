@@ -65,7 +65,7 @@ export default {
             },
             /* providerPrice */            
             {
-              name: 'providerPrice', label: `$${this.$tr('iorder.cms.form.supplier')}`, field: 'suppliers', align: 'center',
+              name: 'providerPrice', label: `$ ${this.$tr('iorder.cms.form.supplier')}`, field: 'suppliers', align: 'center',
               format: (val) => {                
                 const result = []
                 val.forEach(item => {                  
@@ -76,7 +76,7 @@ export default {
             },            
             /* price */
             {
-              name: 'price', label: '$ Waruwa', field: 'price', align: 'center',
+              name: 'price', label: `$ ${this.$tr('iorder.cms.form.price')}`, field: 'price', align: 'center',
               format: (val) => `$${val}` || '-',
               contentType: (row) => {                
                 let icon = ''
@@ -97,7 +97,9 @@ export default {
             /* quantity: */
            /* add all amounts through suppliers */
             {
-              name: 'quantity', label: 'Unidades Sol/Disp', field: 'quantity', align: 'center',
+              name: 'quantity', label: this.$tr('iorder.cms.form.requestedAndAvaliableQuantity'), field: 'quantity', align: 'center',
+              headerStyle: 'max-width: 200px !important',
+              headerClasses: 'ellipsis',
               contentType: (row) => {                
                 let quantity = 0
                 row.suppliers.forEach(item => {
@@ -110,7 +112,7 @@ export default {
                   props: {
                     label:  `${row.quantity}/${quantity}`,
                     color: '#FF8C00',
-                    icon                
+                    icon
                   }
                 }              
               }
@@ -154,7 +156,16 @@ export default {
               }
             },
             /* observations */
-            {name: 'observations', label: this.$tr('isite.cms.form.observations'), field: 'observations', align: 'center', style: 'width: 200px'},
+            {name: 'observations', label: this.$tr('iorder.cms.form.observations'), field: 'observations', align: 'center', style: 'width: 200px'},
+            {
+              name: 'createdAt', label: this.$tr('isite.cms.form.createdAt'), field: 'createdAt', align: 'left',
+              format: val => val ? this.$trd(val) : '-'
+            }, 
+            {
+              name: 'updatedAt', label: this.$tr('isite.cms.form.createdAt'), field: 'updatedAt', align: 'left',
+              format: val => val ? this.$trd(val) : '-'
+            }
+              
           ],
           requestParams: {
             include: 'suppliers.supplier',
@@ -168,7 +179,7 @@ export default {
               type: 'select',
               quickFilter: true,
               props: {
-                label: "Order",
+                label: this.$tr('iorder.cms.form.order'),
                 clearable: true,
               },
               loadOptions: {
@@ -186,9 +197,9 @@ export default {
               type: 'select',
               quickFilter: true,
               props: {
-                label: '-prodcuts',
-                //multiple: true,
-                //useChips: true,
+                label: this.$tr('isite.cms.form.product'),
+                useInput: true,
+                clearable: true                
               },
               loadOptions: {
                 apiRoute: 'apiRoutes.qproduct.products',
@@ -205,17 +216,15 @@ export default {
               type: 'select',
               quickFilter: true,
               props: {
-                label: 'suppliers',
-                multiple: true,
-                useChips: true,
+                label: this.$tr('iorder.cms.form.supplier'),                
                 useInput: true,
-                clearable: true,
+                clearable: true
               },
               loadOptions: {
                 apiRoute: 'apiRoutes.quser.users',
                 filterByQuery: true,
                 select: {
-                  label: 'email',
+                  label: item => `${item.firstName} ${item.lastName}`,
                   id: item => `${item.id}`                
                 }
               }
@@ -248,10 +257,12 @@ export default {
             }
           },
 
+          /*
           help: {
             title: this.$tr('itask.cms.taskManagement'),
             description: this.$tr('itask.cms.taskManagement')
           }
+          */
 
         },
       }

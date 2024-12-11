@@ -11,6 +11,7 @@
 //Components
 import dynamicList from 'modules/qsite/_components/master/dynamicList';
 import {SUPPLY_STATUSES} from 'src/modules/qorder/_components/status/constants';
+import { cache } from 'src/plugins/utils';
 
 export default {
 	props: {},
@@ -42,7 +43,7 @@ export default {
 								name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
 							},
 							{
-								name: 'title', label: 'Producto', field: 'item',
+								name: 'title', label: this.$tr('isite.cms.form.product'), field: 'item',
 								align: 'left', 
 								style: 'max-width: 250px;padding-top: 10px;font-family: Manrope;font-size: 15px;font-weight: 700;line-height: 20px;color: #0089FF',
 								format: (val) => val.title || '-',
@@ -50,25 +51,23 @@ export default {
 
 							/* price */
 							{
-								name: 'itemPrice', label: 'Precio Waruwa', field: 'item', align: 'center',
-								icon: 'fa-regular fa-dollar',
-								format: val => `$${val.price}`
+								name: 'itemPrice', label: this.$tr('isite.cms.form.price'), field: 'item', align: 'center',
+								icon: 'fa-solid fa-dollar',
+								format: val => `<span class="q-ml-md">$${val.price}</span>`
 							},
 							
 							/* providerPrice */
 							{
-								name: 'price', label: 'precio Proveedor', field: 'price', align: 'center',
-								icon: 'fa-regular fa-dollar',
-								format: val => `$${val}`,
+								name: 'price', label: this.$tr('iorder.cms.form.supplierPrice'), field: 'price', align: 'center',
+								icon: 'fa-solid fa-dollar',
+								format: val => `<span class="q-ml-md">$${val}</span>`,
 								dynamicField: row => {
 									return {
 										vIf: row.statusId == SUPPLY_STATUSES.SUPPLY_PENDING,
 										type: 'input',
 										props: {
-											label: `${this.$tr('isite.cms.form.units')}*`,
-											rules: [
-												val => !!val || this.$tr('isite.cms.message.fieldRequired')
-											],
+											label: `${this.$tr('iorder.cms.form.supplierPrice')}`,
+											type: 'number'
 										},
 									}
 								}
@@ -77,38 +76,38 @@ export default {
 							
 							/* requested quantity: */
 							{
-								name: 'requestedQuantity', label: 'Unidades Solicitadas', field: 'item', align: 'center',
+								name: 'requestedQuantity', label: this.$tr('iorder.cms.form.requestedQuantity'), field: 'item', align: 'center',
 								icon: 'fa-regular fa-boxes-stacked',
-								format: val => val.quantity
+								format: val => `<span class="q-ml-lg">${val.quantity}</span>`
 							},
 
 							/* quantity: */
 							{
-								name: 'quantity', label: 'Unidades Disponibles', field: 'quantity', align: 'center',
+								name: 'quantity', label: this.$tr('iorder.cms.form.avaliableQuantity'), field: 'quantity', align: 'center',
 								icon: 'fa-regular fa-boxes-stacked',
+								format: val => `<span class="q-ml-lg">${val}</span>`,
 								dynamicField: row => {
 									return {
 										vIf: row.statusId == SUPPLY_STATUSES.SUPPLY_PENDING,
 										type: 'input',
 										props: {
-											label: `${this.$tr('isite.cms.form.units')}*`,
-											rules: [
-												val => !!val || this.$tr('isite.cms.message.fieldRequired')
-											],
+											label: `${this.$tr('iorder.cms.form.avaliableQuantity')}`,
+											type: 'number'
 										},
 									}
 								}
 							},							
 							/* comment */
-							{ name: 'comment', label: this.$tr('isite.cms.form.observations'), field: 'comment', align: 'center',
+							{ name: 'comment', label: this.$tr('iorder.cms.form.observations'), field: 'comment', align: 'center',
 								icon: 'fa-regular fa-comment-dots',
-								format: val => val || '-',
+								format: val =>  val ? `<span class="q-ml-lg">${val}</span>` : `<span class="q-ml-lg">-</span>`,
 								dynamicField: row => {
 									return {
 										vIf: row.statusId == SUPPLY_STATUSES.SUPPLY_PENDING,
 										type: 'input',
 										props: {
-											label: `${this.$tr('isite.cms.form.observations')}`										
+											label: `${this.$tr('iorder.cms.form.observations')}`, 
+											autogrow: true
 										}
 									}
               	}
@@ -123,26 +122,54 @@ export default {
 						actions: [
               {               
                 name: 'refused',
-                label: 'Rechazar',
+                label: this.$tr('iorder.cms.label.refuse'),
                 style: "width: 100px",
                 align: "center",
 								color: 'grey-4',
-								textColor: 'grey',
+								textColor: 'grey-8',
 								vIf: (row) => (row.statusId == SUPPLY_STATUSES.SUPPLY_PENDING) && !row.isLoading,
                 action: (row) => {
-									row.statusId = SUPPLY_STATUSES.SUPPLY_REFUSED
-									this.updateRow(row)
+									this.$alert.warning({
+										mode: 'modal',
+										title: `ID: ${row.id} - ${row.item.title} `,
+										message: this.$tr('iorder.cms.label.refuseMessage'),
+										actions: [
+											{ label: this.$tr('isite.cms.label.cancel'), color: 'grey' },
+											{
+												label: this.$tr('iorder.cms.label.refuseOrder'),
+												color: 'red',
+												handler: () => {
+													row.statusId = SUPPLY_STATUSES.SUPPLY_REFUSED
+													this.updateRow(row)
+												}
+											}
+										]
+									});
                 }
               },
               {               
                 name: 'accepted',
-                label: 'Aceptar',
+                label: this.$tr('iorder.cms.label.accept'),
                 style: "width: 100px",
                 color: 'green',
 								vIf: (row) => (row.statusId == SUPPLY_STATUSES.SUPPLY_PENDING) && !row.isLoading,
                 action: (row) => {
-									row.statusId = SUPPLY_STATUSES.SUPPLY_ACCEPTED
-									this.updateRow(row)
+									this.$alert.info({
+										mode: 'modal',
+										title: `ID: ${row.id} - ${row.item.title} `,
+										message: this.$tr('iorder.cms.label.acceptMessage'),
+										actions: [
+											{ label: this.$tr('isite.cms.label.cancel'), color: 'grey' },
+											{
+												label: this.$tr('iorder.cms.label.acceptOrder'),
+												color: 'green',
+												handler: () => {
+													row.statusId = SUPPLY_STATUSES.SUPPLY_ACCEPTED
+													this.updateRow(row)
+												}
+											}
+										]
+									});
                 }
               },
             ],
@@ -151,6 +178,25 @@ export default {
 						include: 'item',
 					},
 					filters: {
+						/*
+						'item.orderId': {
+              value: [],
+              type: 'select',
+              quickFilter: true,
+              props: {
+                label: '--orders',
+                useInput: true,
+                clearable: true,
+              },
+              loadOptions: {
+                apiRoute: 'apiRoutes.qorder.orders',
+                select: {
+                  label: 'id',
+                  id: item => `${item.id}`
+                }
+              }
+            },
+						*/
 						statusId: {
               type: 'select',
               name: 'statusId',
@@ -159,9 +205,6 @@ export default {
                 label: this.$tr('isite.cms.form.status'),
                 useInput: true,
                 clearable: true,
-                rules: [
-                  val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
-                ]
               },
               loadOptions: {
                 apiRoute: 'apiRoutes.qorder.statuses',
@@ -175,12 +218,12 @@ export default {
                   id: item => `${item.id}`
                 }
               }
-            }
+            } 
 					},
 
 					help: {
 						title: this.$tr('iorder.cms.suppliesManagement'),
-						description: this.$tr('iorder.cms.suppliesManagement')
+						description: this.$tr('iorder.cms.label.suppliesHelp')
 					}
 
 				}, 
@@ -189,12 +232,10 @@ export default {
 					return new Promise((resolve, reject) => {						
 						let msgs = []
             /* price */
-						if (row.price < 1 ) msgs.push(`'el precio del proveedor debe ser menor`)
-
+						if (row.price < 1 ) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidPrice'));
 						/*quantity*/
-						if (row.quantity < 1 ) msgs.push(`ingrese una cantidad valida`)
-
-						if (row.quantity > row.item.quantity) msgs.push(`la cantidad debe ser menor a la solicitada`)
+						if (row.quantity < 1 ) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidQuantity'));
+						if (row.quantity > row.item.quantity) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidAvaliableQuantity'));
 
 						if(msgs.length) {
 							this.$alert.error({message: msgs.join(', ')});
@@ -225,15 +266,9 @@ export default {
 			this.selectedRow.row = row;
 			this.selectedRow.showModal = true;
 		},
-		onUpdate(row) {
-			this.$refs.crudComponent.update(row);
-		},
-		onDelete(row) {
-			this.$refs.crudComponent.delete(row);
-		}, 
 		async updateRow(row){
 			this.$refs.dynamicList.updateRow(row)
-			//await cache.remove({ allKey: 'apiRoutes.qorder.orders' });
+			await cache.remove({ allKey: 'apiRoutes.qorder.items' });
 		}
 	}
 };
