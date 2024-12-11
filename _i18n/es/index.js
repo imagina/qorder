@@ -3,11 +3,11 @@ export default {
     "cms": {
       "sidebar": {
         "adminGroup": "Órdenes", 
-        "adminOrders": "Órdenes",
+        "adminOrders": "Elementos",
       },      
       "label": {},
       "form": {},
-      "orderManagement": "Órdenes"
+      "orderManagement": "Elementos"
     }
   }
 }

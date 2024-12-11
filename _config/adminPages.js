@@ -15,15 +15,15 @@ export default {
     }
   },
 
-  suppliers: {
+  supplies: {
     //permission: 'iorder.suppliers.manage',
     activated: true,
     authenticated: true,
-    path: '/orders/suppliers/index',
-    name: 'qorder.admin.suppliers',
-    page: () => import('modules/qorder/_pages/suppliers'),
+    path: '/orders/supplies/index',
+    name: 'qorder.admin.supplies',
+    page: () => import('modules/qorder/_pages/supplies'),
     layout: () => import('layouts/master.vue'),
-    title: 'iorder.cms.sidebar.adminSuppliers',
+    title: 'iorder.cms.sidebar.adminSupplies',
     icon: 'fa-light fa-truck-field',
     subHeader: {
       refresh: true,

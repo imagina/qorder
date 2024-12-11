@@ -7,7 +7,7 @@ export default [
       icon: 'fa-light fa-receipt',
       children: [
         pages.qorder.orders,
-        pages.qorder.suppliers
+        pages.qorder.supplies
       ]
     },
   ]
