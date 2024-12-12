@@ -216,6 +216,18 @@ export default {
                 }
               }
             },
+            date: {
+              value: {},
+              quickFilter: true,
+              type: 'dateRange',
+              props: {
+                label: this.$tr('isite.cms.form.date'),
+                clearable: true,
+                removeTime: true,
+                autoClose: true
+              }
+            },
+
 						statusId: {
               type: 'select',
               name: 'statusId',
