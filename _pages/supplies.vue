@@ -200,6 +200,22 @@ export default {
               }
             },
 						*/
+						orderId: {
+              value: [],
+              type: 'select',
+              quickFilter: true,
+              props: {
+                label: this.$tr('iorder.cms.form.order'),
+                clearable: true,
+              },
+              loadOptions: {
+                apiRoute: 'apiRoutes.qorder.orders',
+                select: {
+                  label: item => `${item.id} - ${item.createdAt}`,
+                  id: item => `${item.id}`
+                }
+              }
+            },
 						statusId: {
               type: 'select',
               name: 'statusId',

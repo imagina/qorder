@@ -189,6 +189,7 @@ export default {
               value: [],
               type: 'select',
               quickFilter: true,
+              quickFilterClass: 'col',
               props: {
                 label: this.$tr('iorder.cms.form.order'),
                 clearable: true,
@@ -207,6 +208,7 @@ export default {
               value: [],
               type: 'select',
               quickFilter: true,
+              quickFilterClass: 'col',
               props: {
                 label: this.$tr('isite.cms.form.product'),
                 useInput: true,
@@ -226,6 +228,7 @@ export default {
               value: [],
               type: 'select',
               quickFilter: true,
+              quickFilterClass: 'col',
               props: {
                 label: this.$tr('iorder.cms.form.supplier'),
                 useInput: true,
@@ -241,10 +244,24 @@ export default {
               }
             },
 
+            date: {
+              value: {},
+              quickFilter: true,
+              quickFilterClass: 'col',
+              type: 'dateRange',
+              props: {
+                label: this.$tr('isite.cms.form.date'),
+                clearable: true,
+                removeTime: true,
+                autoClose: true
+              }
+            },
+
             statusId: {
               type: 'select',
               name: 'statusId',
               quickFilter: true,
+              quickFilterClass: 'col',
               props: {
                 label: this.$tr('isite.cms.form.status'),
                 useInput: true,
