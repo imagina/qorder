@@ -121,7 +121,7 @@ export default {
 
             /* status */
             {
-              name: 'status', label: this.$tr('isite.cms.form.status'), field: 'status', align: 'center', style: 'width: 250px',
+              name: 'status', label: this.$tr('isite.cms.form.status'), field: 'status', align: 'center',
               contentType: (row) => {
                 return {
                   template: 'status',
@@ -131,7 +131,8 @@ export default {
                     icon: row.status.icon
                   }
                 }              
-              },              
+              },
+              /*
               dynamicField: row => {
                 return {
                   type: 'select',
@@ -158,6 +159,7 @@ export default {
                   }
                 }
               }
+              */
             },
             /* observations */
             {name: 'observations', label: this.$tr('iorder.cms.form.observations'), field: 'observations', align: 'center', style: 'width: 200px'},
@@ -246,9 +248,6 @@ export default {
                 label: this.$tr('isite.cms.form.status'),
                 useInput: true,
                 clearable: true,
-                rules: [
-                  val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
-                ]
               },
               loadOptions: {
                 apiRoute: 'apiRoutes.qorder.statuses',
