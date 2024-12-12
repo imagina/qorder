@@ -137,7 +137,7 @@ export default {
                 return {
                   type: 'select',
                   name: 'statusId',
-                  vIf: (row.statusId == ITEM_STATUSES.ITEM_PENDING) && !row.isLoading,
+                  //vIf: (row.statusId == ITEM_STATUSES.ITEM_PENDING) && !row.isLoading,
                   props: {
                     label: this.$tr('isite.cms.form.status'),
                     useInput: true,
@@ -160,6 +160,7 @@ export default {
                 }
               }
               */
+              
             },
             /* observations */
             {name: 'observations', label: this.$tr('iorder.cms.form.observations'), field: 'observations', align: 'center', style: 'width: 200px'},
@@ -276,6 +277,7 @@ export default {
             icon: 'fa-light fa-circle-check',
             name: 'acceptItem',
             label: this.$tr('iorder.cms.label.acceptOrder'),
+            vIf: (row) => row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW,
             action: (row) => {
               this.$alert.info({
                 mode: 'modal',
@@ -299,6 +301,7 @@ export default {
             icon: 'fa-light fa-circle-xmark',
             name: 'refuseItem',
             label: this.$tr('iorder.cms.label.refuseOrder'),
+            vIf: (row) => (row.statusId == ITEM_STATUSES.ITEM_PENDING || row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW ),
             action: (row) => {
               this.$alert.warning({
                 mode: 'modal',
