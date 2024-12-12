@@ -11,6 +11,7 @@
 <script>
 //Components
 import dynamicList from 'modules/qsite/_components/master/dynamicList';
+import {ITEM_STATUSES} from 'src/modules/qorder/_components/status/constants';
 
 export default {
   props: {},
@@ -131,26 +132,29 @@ export default {
                   }
                 }              
               },              
-              dynamicField: {
-                type: 'select',
-                name: 'statusId',
-                props: {
-                  label: this.$tr('isite.cms.form.status'),
-                  useInput: true,
-                  rules: [
-                    val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
-                  ]
-                },
-                loadOptions: {
-                  apiRoute: 'apiRoutes.qorder.statuses',
-                  requestParams: {
-                    filter: {
-                      groupId: '2'
-                    }
+              dynamicField: row => {
+                return {
+                  type: 'select',
+                  name: 'statusId',
+                  vIf: (row.statusId == ITEM_STATUSES.ITEM_PENDING) && !row.isLoading,
+                  props: {
+                    label: this.$tr('isite.cms.form.status'),
+                    useInput: true,
+                    rules: [
+                      val => !!val?.length || this.$tr('isite.cms.message.fieldRequired')
+                    ]
                   },
-                  select: {
-                    label: 'title',
-                    id: item => `${item.id}`
+                  loadOptions: {
+                    apiRoute: 'apiRoutes.qorder.statuses',
+                    requestParams: {
+                      filter: {
+                        groupId: '2'
+                      }
+                    },
+                    select: {
+                      label: 'title',
+                      id: item => `${item.id}`
+                    }
                   }
                 }
               }
@@ -162,8 +166,12 @@ export default {
               format: val => val ? this.$trd(val) : '-'
             }, 
             {
-              name: 'updatedAt', label: this.$tr('isite.cms.form.createdAt'), field: 'updatedAt', align: 'left',
+              name: 'updatedAt', label: this.$tr('isite.cms.form.updatedAt'), field: 'updatedAt', align: 'left',
               format: val => val ? this.$trd(val) : '-'
+            }, 
+            {
+              name: 'actions', label: this.$tr('isite.cms.form.actions'),
+              align: 'center'
             }
               
           ],
@@ -263,8 +271,58 @@ export default {
             description: this.$tr('itask.cms.taskManagement')
           }
           */
-
         },
+        actions: [
+          {
+            icon: 'fa-light fa-circle-check',
+            name: 'acceptItem',
+            label: this.$tr('iorder.cms.label.acceptOrder'),
+            action: (row) => {
+              this.$alert.info({
+                mode: 'modal',
+                title: `ID: ${row.id} - ${row.title} `,
+                message: this.$tr('iorder.cms.label.acceptMessage'),
+                actions: [
+                  { label: this.$tr('isite.cms.label.cancel'), color: 'grey' },
+                  {
+                    label: this.$tr('iorder.cms.label.acceptOrder'),
+                    color: 'green',
+                    handler: () => {
+                      item.statusId = ITEM_STATUSES.ITEM_COMPLETED
+                      this.updateRow(row)
+                    }
+                  }
+                ]
+              });
+            }
+          },
+          {
+            icon: 'fa-light fa-circle-xmark',
+            name: 'refuseItem',
+            label: this.$tr('iorder.cms.label.refuseOrder'),
+            action: (row) => {
+              this.$alert.warning({
+                mode: 'modal',
+                title: `ID: ${row.id} - ${row.title} `,
+                message: this.$tr('iorder.cms.label.refuseMessage'),
+                actions: [
+                  { label: this.$tr('isite.cms.label.cancel'), color: 'grey' },
+                  {
+                    label: this.$tr('iorder.cms.label.refuseOrder'),
+                    color: 'red',
+                    handler: () => {
+                      row.statusId = ITEM_STATUSES.ITEM_CANCELLED
+                      this.updateRow(row)
+                    }
+                  }
+                ]
+              });
+
+
+
+            }
+          }
+        ]
       }
     };
   },
@@ -276,7 +334,11 @@ export default {
       this.selectedRow.showModal = false;
       this.selectedRow.row = null;
       this.$refs.dynamicList.getData({ page: 1 }, true);
-    }
+    }, 
+    async updateRow(row){
+			this.$refs.dynamicList.updateRow(row)
+			await cache.remove({ allKey: 'apiRoutes.qorder.items' });
+		}
   }
 };
 </script>

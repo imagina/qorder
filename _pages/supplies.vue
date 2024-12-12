@@ -265,10 +265,6 @@ export default {
 			const newRow = await this.$refs.dynamicList.reloadRow(row);
 			this.selectedRow.row = newRow;
 		},
-		openShowModal(row) {
-			this.selectedRow.row = row;
-			this.selectedRow.showModal = true;
-		},
 		async updateRow(row){
 			this.$refs.dynamicList.updateRow(row)
 			await cache.remove({ allKey: 'apiRoutes.qorder.items' });
