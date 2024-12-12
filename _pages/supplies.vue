@@ -40,7 +40,7 @@ export default {
 					grid: {
 						columns: [
 							{
-								name: 'mainImage', label: this.$tr('isite.cms.form.id'), field: 'item.extraData.mediaFiles.mainimage.url',
+								name: 'mainImage', field: 'item.extraData.mediaFiles.mainimage.url',
 							},
 							{
 								name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
