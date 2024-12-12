@@ -40,7 +40,7 @@ export default {
         read: {
           title: this.$tr('iorder.cms.orderManagement'),
           tableProps: {
-          },          
+          },
           columns: [
             {
               name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
@@ -53,7 +53,7 @@ export default {
             {
               name: 'suppliers', label: this.$tr('iorder.cms.form.supplier'), field: 'suppliers',
               align: 'center', style: 'max-width: 250px',
-              format: (val) => {                
+              format: (val) => {
                 const result = []
                 val.forEach(item => {
                   let label =  `${item.supplier?.firstName || ''} ${item.supplier?.lastName || ''}`
@@ -64,25 +64,25 @@ export default {
                 return result.join(', ')
               }
             },
-            /* providerPrice */            
+            /* providerPrice */
             {
               name: 'providerPrice', label: `$ ${this.$tr('iorder.cms.form.supplier')}`, field: 'suppliers', align: 'center',
-              format: (val) => {                
+              format: (val) => {
                 const result = []
-                val.forEach(item => {                  
+                val.forEach(item => {
                   if(item.price) result.push(`$${item.price}`)
                 });
                 return result.join(', ')
               }
-            },            
+            },
             /* price */
             {
               name: 'price', label: `$ ${this.$tr('iorder.cms.form.price')}`, field: 'price', align: 'center',
               format: (val) => `$${val}` || '-',
-              contentType: (row) => {                
+              contentType: (row) => {
                 let icon = ''
                 row.suppliers.forEach(item => {
-                  if(item.price > row.price) icon = 'fa-light fa-triangle-exclamation' 
+                  if(item.price > row.price) icon = 'fa-solid fa-triangle-exclamation'
                 });
                 return {
                   template: 'status',
@@ -91,23 +91,23 @@ export default {
                     color: '#FF8C00',
                     icon
                   }
-                }              
-              }              
+                }
+              }
             },
-          
+
             /* quantity: */
            /* add all amounts through suppliers */
             {
               name: 'quantity', label: this.$tr('iorder.cms.form.requestedAndAvaliableQuantity'), field: 'quantity', align: 'center',
               headerStyle: 'max-width: 200px !important',
               headerClasses: 'ellipsis',
-              contentType: (row) => {                
+              contentType: (row) => {
                 let quantity = 0
                 row.suppliers.forEach(item => {
                   quantity += item.quantity
                 })
 
-                const icon = row.quantity > quantity ? 'fa-light fa-triangle-exclamation' : ''
+                const icon = row.quantity > quantity ? 'fa-solid fa-triangle-exclamation' : ''
                 return {
                   template: 'status',
                   props: {
@@ -115,10 +115,10 @@ export default {
                     color: '#FF8C00',
                     icon
                   }
-                }              
+                }
               }
             },
-            
+
             /* status */
             {
               name: 'status', label: this.$tr('isite.cms.form.status'), field: 'status', align: 'center', style: 'width: 250px',
@@ -164,7 +164,7 @@ export default {
             {
               name: 'createdAt', label: this.$tr('isite.cms.form.createdAt'), field: 'createdAt', align: 'left',
               format: val => val ? this.$trd(val) : '-'
-            }, 
+            },
             {
               name: 'updatedAt', label: this.$tr('isite.cms.form.updatedAt'), field: 'updatedAt', align: 'left',
               format: val => val ? this.$trd(val) : '-'
@@ -173,7 +173,7 @@ export default {
               name: 'actions', label: this.$tr('isite.cms.form.actions'),
               align: 'center'
             }
-              
+
           ],
           requestParams: {
             include: 'suppliers.supplier',
@@ -207,24 +207,24 @@ export default {
               props: {
                 label: this.$tr('isite.cms.form.product'),
                 useInput: true,
-                clearable: true                
+                clearable: true
               },
               loadOptions: {
                 apiRoute: 'apiRoutes.qproduct.products',
                 filterByQuery: true,
                 select: {
                   label: 'title',
-                  id: item => `${item.id}`                
+                  id: item => `${item.id}`
                 }
               }
             },
-            
+
             'suppliers.supplierId': {
               value: [],
               type: 'select',
               quickFilter: true,
               props: {
-                label: this.$tr('iorder.cms.form.supplier'),                
+                label: this.$tr('iorder.cms.form.supplier'),
                 useInput: true,
                 clearable: true
               },
@@ -233,10 +233,10 @@ export default {
                 filterByQuery: true,
                 select: {
                   label: item => `${item.firstName} ${item.lastName}`,
-                  id: item => `${item.id}`                
+                  id: item => `${item.id}`
                 }
               }
-            },            
+            },
 
             statusId: {
               type: 'select',
@@ -317,9 +317,6 @@ export default {
                   }
                 ]
               });
-
-
-
             }
           }
         ]

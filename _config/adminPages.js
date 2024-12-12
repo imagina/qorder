@@ -16,7 +16,7 @@ export default {
   },
 
   supplies: {
-    //permission: 'iorder.suppliers.manage',
+    permission: 'iorder.suppliers.manage',
     activated: true,
     authenticated: true,
     path: '/orders/supplies/index',
@@ -29,6 +29,6 @@ export default {
       refresh: true,
     }
   }
-} 
+}
 
 
