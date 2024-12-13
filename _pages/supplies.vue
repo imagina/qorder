@@ -35,10 +35,16 @@ export default {
 				showAs: 'grid',
 				read: {
 					title: this.$tr('iorder.cms.suppliesManagement'),
+					systemName: 'order.supplies',
 					tableProps: {
 					},
 					grid: {
 						columns: [
+							{
+								name: 'title', label: this.$tr('iorder.cms.form.orderId'), field: 'item',
+								format: (val) => `${this.$tr('iorder.cms.form.orderId')} : ${val.orderId}`,
+								style: 'max-width: 250px;font-family: Manrope;font-size: 13px;font-weight: 700;line-height: 20px;',
+							},
 							{
 								name: 'mainImage', field: 'item.extraData.mediaFiles.mainimage.url',
 							},
@@ -205,13 +211,13 @@ export default {
               type: 'select',
               quickFilter: true,
               props: {
-                label: this.$tr('iorder.cms.form.order'),
+                label: this.$tr('iorder.cms.form.orderId'),
                 clearable: true,
               },
               loadOptions: {
                 apiRoute: 'apiRoutes.qorder.orders',
                 select: {
-                  label: item => `${item.id} - ${item.createdAt}`,
+                  label: item => `${this.$tr('iorder.cms.form.orderId')} ${item.id}`,
                   id: item => `${item.id}`
                 }
               }

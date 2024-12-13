@@ -17,6 +17,7 @@ export default {
       },
       "form": {
         "order": "Order",
+        "orderId": "# Order",
         "supplier": "Supplier",
         "price": "Price",
         "supplierPrice": "Supplier Price",

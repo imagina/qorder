@@ -39,11 +39,12 @@ export default {
         },
         read: {
           title: this.$tr('iorder.cms.orderManagement'),
+          systemName: 'order.orders',
           tableProps: {
           },
           columns: [
             {
-              name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
+              name: 'id', label: this.$tr('iorder.cms.form.orderId'), field: 'orderId', style: '',
             },
             {
               name: 'title', label: this.$tr('isite.cms.form.product'), field: 'title',
@@ -197,7 +198,7 @@ export default {
               loadOptions: {
                 apiRoute: 'apiRoutes.qorder.orders',
                 select: {
-                  label: item => `${item.id} - ${item.createdAt}`,
+                  label: item => `${this.$tr('iorder.cms.form.orderId')} ${item.id}`,
                   id: item => `${item.id}`
                 }
               }
