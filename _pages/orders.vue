@@ -164,7 +164,15 @@ export default {
               
             },
             /* observations */
-            {name: 'observations', label: this.$tr('iorder.cms.form.observations'), field: 'observations', align: 'center', style: 'width: 200px'},
+            {name: 'observations', label: this.$tr('iorder.cms.form.observations'), field: 'suppliers', align: 'center', style: 'width: 200px',
+            format: (val) => {
+                const result = []
+                val.forEach(item => {
+                  if(item?.comment) result.push(`${item.comment}`)
+                });
+                return result.join(', ')
+              }
+            },
             {
               name: 'createdAt', label: this.$tr('isite.cms.form.createdAt'), field: 'createdAt', align: 'left',
               format: val => val ? this.$trd(val) : '-'
@@ -307,7 +315,7 @@ export default {
                     label: this.$tr('iorder.cms.label.acceptOrder'),
                     color: 'green',
                     handler: () => {
-                      item.statusId = ITEM_STATUSES.ITEM_COMPLETED
+                      row.statusId = ITEM_STATUSES.ITEM_COMPLETED
                       this.updateRow(row)
                     }
                   }
