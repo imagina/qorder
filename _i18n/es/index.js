@@ -19,6 +19,7 @@ export default {
         "order": "Orden",
         "orderId": "# Orden",
         "supplier": "Proveedor",
+        "suppliers": "Proveedores",
         "price": "Precio",
         "supplierPrice": "Precio Proveedor",
         "requestedQuantity": "Unidades Solicitadas",

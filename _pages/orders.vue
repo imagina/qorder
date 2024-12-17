@@ -5,18 +5,33 @@
       <dynamicList ref="dynamicList" :listConfig="listConfig" @new="() => $refs.crudComponent.create()">
       </dynamicList>
     </div>
+
+    <!--- show order modal --->
+    <master-modal
+      v-model="selectedRow.showModal"
+      :title="`${this.$tr('iorder.cms.form.order')} : ${selectedRow.row?.id}`"
+      custom-position
+      @hide="selectedRow.showModal = false"
+    >
+      <order 
+        :row="selectedRow.row"
+      />
+    </master-modal>
+
     <inner-loading :visible="loading" />
   </div>
 </template>
 <script>
 //Components
 import dynamicList from 'modules/qsite/_components/master/dynamicList';
+import order from 'modules/qorder/_components/order/order.vue';
 import {ITEM_STATUSES} from 'src/modules/qorder/_components/status/constants';
 
 export default {
   props: {},
   components: {
-    dynamicList
+    dynamicList, 
+    order
   },
   watch: {},
   mounted() {
@@ -27,7 +42,6 @@ export default {
   data() {
     return {
       selectedRow: {
-        timeLogsModal: false,
         showModal: false,
         row: null
       },
@@ -45,6 +59,7 @@ export default {
           columns: [
             {
               name: 'id', label: this.$tr('iorder.cms.form.orderId'), field: 'orderId', style: '',
+              onClick: (val, row) => this.showModal(row)
             },
             {
               name: 'title', label: this.$tr('isite.cms.form.product'), field: 'title',
@@ -363,7 +378,11 @@ export default {
     async updateRow(row){
 			this.$refs.dynamicList.updateRow(row)
 			await cache.remove({ allKey: 'apiRoutes.qorder.items' });
-		}
+		}, 
+    showModal(row){
+      this.selectedRow.row = row
+      this.selectedRow.showModal = true
+    }
   }
 };
 </script>
