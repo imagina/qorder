@@ -15,6 +15,7 @@
     >
       <order 
         :row="selectedRow.row"
+        :actions="listConfig.actions"
       />
     </master-modal>
 
@@ -190,11 +191,11 @@ export default {
             },
             {
               name: 'createdAt', label: this.$tr('isite.cms.form.createdAt'), field: 'createdAt', align: 'left',
-              format: val => val ? this.$trd(val) : '-'
+              format: val => val ? this.$trd(val, 'short') : '-'
             },
             {
               name: 'updatedAt', label: this.$tr('isite.cms.form.updatedAt'), field: 'updatedAt', align: 'left',
-              format: val => val ? this.$trd(val) : '-'
+              format: val => val ? this.$trd(val, 'short') : '-'
             }, 
             {
               name: 'actions', label: this.$tr('isite.cms.form.actions'),

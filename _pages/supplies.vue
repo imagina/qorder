@@ -51,6 +51,7 @@ export default {
 							{
 								name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
 							},
+							
 							{
 								name: 'title', label: this.$tr('isite.cms.form.product'), field: 'item',
 								align: 'left', 
@@ -126,6 +127,10 @@ export default {
 								name: 'status', label: this.$tr('isite.cms.form.status'), field: 'status',								
 								align: 'left', style: 'max-width: 250px',
 								format: val => `<span class="${val.icon}" style="color: ${val.color}"></span>&nbsp;&nbsp;${val.title}`
+							},
+							{
+								name: 'createdAt', label: this.$tr('isite.cms.form.createdAt'), field: 'createdAt', style: '',
+								format: val => this.$trd(val)
 							},
 						],
 						actions: [

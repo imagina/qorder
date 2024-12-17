@@ -26,6 +26,7 @@ export default {
         "avaliableQuantity": "Unidades Disponibles",
         "requestedAndAvaliableQuantity": "Unidades Solicitadas/Disponibles",
         "observations": "Observaciones",
+        "total": "Total",
         "beforeUpdate" : {
           "invalidPrice": "Ingrese un precio valido.",
           "invalidQuantity": "Ingrese una cantidad valida.",

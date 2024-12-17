@@ -14,10 +14,11 @@
           <div class="col q-row-gutter-y-md">
             <div class="text-h5 q-my-md">{{ row.title }}</div>
 
-            <div class="text-body1">Cantidad Solcitada: {{ row.quantity }}</div>
+            <div class="text-body1">{{ $tr('iorder.cms.form.requestedQuantity') }}: {{ row.quantity }}</div>
             <div class="text-body1">Precio: ${{row.price}}</div>
-            <div class="text-body2">fecha: {{ $trd(row.createdAt) }}</div>
-            <div class="text-body2">Estado: {{ row.status.title }}</div>
+            <div class="text-body1">total: ${{row.total}}</div>
+            <div class="text-body1">fecha: {{ $trd(row.createdAt) }}</div>
+            <div class="text-body1">Estado: {{ row.status.title }}</div>
           </div>
         </div>
       </q-card-section>
@@ -42,6 +43,8 @@
           </template>          
         </q-table>
       </q-card-section>
+      {{ actions }}
+      
     </q-card>
 </template>
 <script lang="ts">
@@ -49,7 +52,8 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   props: {
-    row: { default: {} }
+    row: { default: {} },
+    actions: { default: [] },
   },
   components: {},
   computed: {
@@ -70,22 +74,20 @@ export default defineComponent({
         { name: "supplier", align: "left", label: this.$tr('iorder.cms.form.supplier'), field: "supplier", 
           format: val => `${val.firstName} ${val.lastName}`
         },
-        { name: "status", align: "left", label: this.$tr('isite.cms.form.status'), field: "status", 
+        { name: "status", align: "left", label: this.$tr('isite.cms.form.status'), field: "status",
           format: val => `${val.title}`
          },
-        { name: "quantity", align: "center", label: "Unidades disponibles", field: "quantity" },
-        { name: "price", align: "center", label: "Precio Unitario", field: "price",
+        { name: "quantity", align: "center", label: this.$tr('iorder.cms.form.avaliableQuantity'), field: "quantity" },
+        { name: "price", align: "center", label: this.$tr('iorder.cms.form.price'), field: "price",
           format: val => `$${val}`
         },
-        { name: "total", align: "center", label: "Total", field: "total", 
+        { name: "total", align: "center", label: this.$tr('iorder.cms.form.total'), field: "total", 
           format: val => `$${val}`
-         },
-        
-        { name: "comment", align: "left", label: "Comment", field: "comment" },
-        { name: "createdAt", align: "left", label: "Creado", field: "createdAt", 
+         },        
+        { name: "comment", align: "left", label: this.$tr('iorder.cms.form.observations'), field: "comment" },
+        { name: "createdAt", align: "left", label: this.$tr('isite.cms.form.createdAt'), field: "createdAt", 
           format: val => this.$trd(val)
-          },
-        
+        },        
       ]
       const rows = this.row.suppliers || []
       return {columns, rows}
