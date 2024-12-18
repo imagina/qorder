@@ -66,6 +66,7 @@ export default {
               name: 'title', label: this.$tr('isite.cms.form.product'), field: 'title',
               align: 'left', style: 'max-width: 250px',
               format: (val) => val || '-',
+              onClick: (val, row) => this.showModal(row)
             },
             {
               name: 'suppliers', label: this.$tr('iorder.cms.form.supplier'), field: 'suppliers',
@@ -79,7 +80,7 @@ export default {
                 });
 
                 return result.join(', ')
-              }
+              },
             },
             /* providerPrice */
             {
@@ -318,6 +319,7 @@ export default {
           {
             icon: 'fa-light fa-circle-check',
             name: 'acceptItem',
+            color: 'green',
             label: this.$tr('iorder.cms.label.acceptOrder'),
             vIf: (row) => row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW,
             action: (row) => {
@@ -342,6 +344,7 @@ export default {
           {
             icon: 'fa-light fa-circle-xmark',
             name: 'refuseItem',
+            color: 'red',
             label: this.$tr('iorder.cms.label.refuseOrder'),
             vIf: (row) => (row.statusId == ITEM_STATUSES.ITEM_PENDING || row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW ),
             action: (row) => {
@@ -378,7 +381,7 @@ export default {
     }, 
     async updateRow(row){
 			this.$refs.dynamicList.updateRow(row)
-			await cache.remove({ allKey: 'apiRoutes.qorder.items' });
+      this.selectedRow.showModal = false
 		}, 
     showModal(row){
       this.selectedRow.row = row
