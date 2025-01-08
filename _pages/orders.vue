@@ -13,7 +13,7 @@
       custom-position
       @hide="selectedRow.showModal = false"
     >
-      <order 
+      <order
         :row="selectedRow.row"
         :actions="listConfig.actions"
       />
@@ -31,7 +31,7 @@ import {ITEM_STATUSES} from 'src/modules/qorder/_components/status/constants';
 export default {
   props: {},
   components: {
-    dynamicList, 
+    dynamicList,
     order
   },
   watch: {},
@@ -117,8 +117,8 @@ export default {
            /* add all amounts through suppliers */
             {
               name: 'quantity', label: this.$tr('iorder.cms.form.requestedAndAvaliableQuantity'), field: 'quantity', align: 'center',
-              headerStyle: 'max-width: 200px !important',
-              headerClasses: 'ellipsis',
+              headerStyle: 'max-width: 160px !important;white-space: normal;word-wrap: break-word;',
+              headerClasses: 'ellipsis-2-lines',
               contentType: (row) => {
                 let quantity = 0
                 row.suppliers.forEach(item => {
@@ -148,7 +148,7 @@ export default {
                     color: row.status.color,
                     icon: row.status.icon
                   }
-                }              
+                }
               },
               /*
               dynamicField: row => {
@@ -178,7 +178,7 @@ export default {
                 }
               }
               */
-              
+
             },
             /* observations */
             {name: 'observations', label: this.$tr('iorder.cms.form.observations'), field: 'suppliers', align: 'center', style: 'width: 200px',
@@ -197,7 +197,7 @@ export default {
             {
               name: 'updatedAt', label: this.$tr('isite.cms.form.updatedAt'), field: 'updatedAt', align: 'left',
               format: val => val ? this.$trd(val, 'short') : '-'
-            }, 
+            },
             {
               name: 'actions', label: this.$tr('isite.cms.form.actions'),
               align: 'center'
@@ -378,11 +378,11 @@ export default {
       this.selectedRow.showModal = false;
       this.selectedRow.row = null;
       this.$refs.dynamicList.getData({ page: 1 }, true);
-    }, 
+    },
     async updateRow(row){
 			this.$refs.dynamicList.updateRow(row)
       this.selectedRow.showModal = false
-		}, 
+		},
     showModal(row){
       this.selectedRow.row = row
       this.selectedRow.showModal = true
