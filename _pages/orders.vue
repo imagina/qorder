@@ -9,14 +9,11 @@
     <!--- show order modal --->
     <master-modal
       v-model="selectedRow.showModal"
-      :title="`${this.$tr('iorder.cms.form.order')} : ${selectedRow.row?.id}`"
+      :title="`${this.$tr('iorder.cms.form.order')} : ${selectedRow.row?.orderId}`"
       custom-position
       @hide="selectedRow.showModal = false"
     >
-      <order
-        :row="selectedRow.row"
-        :actions="listConfig.actions"
-      />
+      <order :id="selectedRow.row?.orderId" />
     </master-modal>
 
     <inner-loading :visible="loading" />
@@ -205,7 +202,7 @@ export default {
 
           ],
           requestParams: {
-            include: 'suppliers.supplier',
+            include: 'suppliers.supplier,order.items.suppliers.supplier',
             filter: {
               entityType: "Modules\\Iproduct\\Entities\\Product"
             }
@@ -321,7 +318,7 @@ export default {
             name: 'acceptItem',
             color: 'green',
             label: this.$tr('iorder.cms.label.acceptOrder'),
-            vIf: (row) => row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW,
+            vIf: (row) => (row.statusId == ITEM_STATUSES.ITEM_PENDING || row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW),
             action: (row) => {
               this.$alert.info({
                 mode: 'modal',
@@ -342,11 +339,36 @@ export default {
             }
           },
           {
+            icon: 'fa-light fa-clock', // Icono que representa espera
+            name: 'pendingItem',
+            color: 'orange',
+            label: this.$tr('iorder.cms.label.pendingItem'),
+            vIf: (row) => (row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW || row.statusId == ITEM_STATUSES.ITEM_CANCELLED),
+            action: (row) => {
+              this.$alert.info({
+                mode: 'modal',
+                title: `ID: ${row.id} - ${row.title} `,
+                message: this.$tr('iorder.cms.label.pendingMessage'),
+                actions: [
+                  { label: this.$tr('isite.cms.label.cancel'), color: 'grey' },
+                  {
+                    label: this.$tr('iorder.cms.label.pendingItem'),
+                    color: 'orange',
+                    handler: () => {
+                      row.statusId = ITEM_STATUSES.ITEM_PENDING;
+                      this.updateRow(row);
+                    }
+                  }
+                ]
+              });
+            }
+          },
+          {
             icon: 'fa-light fa-circle-xmark',
             name: 'refuseItem',
             color: 'red',
             label: this.$tr('iorder.cms.label.refuseOrder'),
-            vIf: (row) => (row.statusId == ITEM_STATUSES.ITEM_PENDING || row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW ),
+            vIf: (row) => (row.statusId == ITEM_STATUSES.ITEM_PENDING || row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW),
             action: (row) => {
               this.$alert.warning({
                 mode: 'modal',
