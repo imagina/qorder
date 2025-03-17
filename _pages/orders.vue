@@ -23,7 +23,7 @@
 //Components
 import dynamicList from 'modules/qsite/_components/master/dynamicList';
 import order from 'modules/qorder/_components/order/order.vue';
-import {ITEM_STATUSES} from 'src/modules/qorder/_components/status/constants';
+import {ITEM_STATUSES, ORDER_STATUSES} from 'src/modules/qorder/_components/status/constants';
 
 export default {
   props: {},
@@ -202,7 +202,7 @@ export default {
 
           ],
           requestParams: {
-            include: 'suppliers.supplier,order.items.suppliers.supplier',
+            include: 'suppliers.supplier,order',
             filter: {
               entityType: "Modules\\Iproduct\\Entities\\Product"
             }
@@ -318,7 +318,15 @@ export default {
             name: 'acceptItem',
             color: 'green',
             label: this.$tr('iorder.cms.label.acceptOrder'),
-            vIf: (row) => (row.statusId == ITEM_STATUSES.ITEM_PENDING || row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW),
+            vIf: ({ statusId, order }) => {
+              const isPendingReview = statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW || statusId == ITEM_STATUSES.ITEM_PENDING;
+              const isCancelledWithValidOrder =
+                statusId == ITEM_STATUSES.ITEM_CANCELLED &&
+                order?.statusId &&
+                (order.statusId == ORDER_STATUSES.ORDER_PENDING || order.statusId == ORDER_STATUSES.ORDER_IN_PROGRESS);
+
+              return isPendingReview || isCancelledWithValidOrder;
+            },
             action: (row) => {
               this.$alert.info({
                 mode: 'modal',
@@ -343,7 +351,15 @@ export default {
             name: 'pendingItem',
             color: 'orange',
             label: this.$tr('iorder.cms.label.pendingItem'),
-            vIf: (row) => (row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW || row.statusId == ITEM_STATUSES.ITEM_CANCELLED),
+            vIf: ({ statusId, order }) => {
+              const isPendingReview = statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW;
+              const isCancelledWithValidOrder =
+                statusId == ITEM_STATUSES.ITEM_CANCELLED &&
+                order?.statusId &&
+                (order.statusId == ORDER_STATUSES.ORDER_PENDING || order.statusId == ORDER_STATUSES.ORDER_IN_PROGRESS);
+
+              return isPendingReview || isCancelledWithValidOrder;
+            },
             action: (row) => {
               this.$alert.info({
                 mode: 'modal',

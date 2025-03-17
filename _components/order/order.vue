@@ -249,7 +249,7 @@ export default defineComponent({
                   label: this.$tr('iorder.cms.label.acceptOrder'),
                   color: 'green',
                   handler: () => {
-                    const statusId = ORDER_STATUSES.ORDER_APPROVED
+                    const statusId = ORDER_STATUSES.ORDER_COMPLETED
                     this.updateOrder({...row, statusId})
                   }
                 }
