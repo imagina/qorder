@@ -3,16 +3,19 @@
     <q-card-section>
       <div class="row q-col-gutter-x-md">
         <div class="col q-row-gutter-y-md">
-          <div v-if="order.status" class="text-body1 q-mb-md">{{ $tr('isite.cms.form.status') }}:
+          <div v-if="order.status" class="text-body1 q-mb-md"><b>{{ $tr('isite.cms.form.status') }}:</b>
             <div outline :style="`color: ${order.status.color}`">
               <span :class="order.status.icon"></span>&nbsp;{{ order.status.title }}
             </div>
           </div>
-          <div v-if="order.type" class="text-body1">{{ $tr('isite.cms.form.type') }}: {{ order.type.title }}</div>
-          <div v-if="order.total > 0" class="text-body1">{{ $tr('iorder.cms.form.total') }}: ${{ order.total }}</div>
-          <div v-if="order.createdAt" class="text-body2 q-mt-md">{{ $tr('isite.cms.form.createdAt') }}: {{ $trd(order.createdAt) }}</div>
+          <div v-if="order.type" class="text-body1"><b>{{ $tr('isite.cms.form.type') }}:</b> {{ order.type.title }}</div>
+          <div v-if="order.total > 0" class="text-body1"><b>{{ $tr('iorder.cms.form.total') }}:</b> ${{ order.total }}</div>
+          <div v-if="order.createdAt" class="text-body2 q-mt-md"><b>{{ $tr('isite.cms.form.createdAt') }}:</b> {{ $trd(order.createdAt) }}</div>
+          <div v-if="order.external?.length" class="text-body2 q-mt-xs">
+            <b>{{ $tr('isite.cms.form.externalId') }}:</b> {{ order.external[0]?.externalId }}
+          </div>
           <div v-if="order.options?.externalCreatedAt" class="text-body2 q-mt-xs">
-            {{ $tr('iorder.cms.label.externalCreatedAt') }}: {{ $trd(order.options?.externalCreatedAt) }}
+            <b>{{ $tr('iorder.cms.label.externalCreatedAt') }}:</b> {{ $trd(order.options?.externalCreatedAt) }}
           </div>
         </div>
       </div>
@@ -292,7 +295,7 @@ export default defineComponent({
     async getOrder() {
       this.loading = true
       const requestParams = {
-        params: {include: 'items.suppliers.supplier'},
+        params: {include: 'items.suppliers.supplier,external'},
         refresh: true
       }
 
