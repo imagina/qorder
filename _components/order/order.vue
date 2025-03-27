@@ -12,7 +12,7 @@
           <div v-if="order.total > 0" class="text-body1"><b>{{ $tr('iorder.cms.form.total') }}:</b> ${{ order.total }}</div>
           <div v-if="order.createdAt" class="text-body2 q-mt-md"><b>{{ $tr('isite.cms.form.createdAt') }}:</b> {{ $trd(order.createdAt) }}</div>
           <div v-if="order.external?.length" class="text-body2 q-mt-xs">
-            <b>{{ $tr('isite.cms.form.externalId') }}:</b> {{ order.external[0]?.externalId }}
+            <b>{{ $tr('isite.cms.form.externalId') }}(Alegra):</b> {{ order.external[0]?.externalId }}
           </div>
           <div v-if="order.options?.externalCreatedAt" class="text-body2 q-mt-xs">
             <b>{{ $tr('iorder.cms.label.externalCreatedAt') }}:</b> {{ $trd(order.options?.externalCreatedAt) }}
