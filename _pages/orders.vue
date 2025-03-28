@@ -9,14 +9,11 @@
     <!--- show order modal --->
     <master-modal
       v-model="selectedRow.showModal"
-      :title="`${this.$tr('iorder.cms.form.order')} : ${selectedRow.row?.id}`"
+      :title="`${this.$tr('iorder.cms.form.order')} : ${selectedRow.row?.orderId}`"
       custom-position
       @hide="selectedRow.showModal = false"
     >
-      <order
-        :row="selectedRow.row"
-        :actions="listConfig.actions"
-      />
+      <order :id="selectedRow.row?.orderId" />
     </master-modal>
 
     <inner-loading :visible="loading" />
@@ -26,7 +23,7 @@
 //Components
 import dynamicList from 'modules/qsite/_components/master/dynamicList';
 import order from 'modules/qorder/_components/order/order.vue';
-import {ITEM_STATUSES} from 'src/modules/qorder/_components/status/constants';
+import {ITEM_STATUSES, ORDER_STATUSES} from 'src/modules/qorder/_components/status/constants';
 
 export default {
   props: {},
@@ -205,7 +202,7 @@ export default {
 
           ],
           requestParams: {
-            include: 'suppliers.supplier',
+            include: 'suppliers.supplier,order',
             filter: {
               entityType: "Modules\\Iproduct\\Entities\\Product"
             }
@@ -321,7 +318,15 @@ export default {
             name: 'acceptItem',
             color: 'green',
             label: this.$tr('iorder.cms.label.acceptOrder'),
-            vIf: (row) => row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW,
+            vIf: ({ statusId, order }) => {
+              const isPendingReview = statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW || statusId == ITEM_STATUSES.ITEM_PENDING;
+              const isCancelledWithValidOrder =
+                statusId == ITEM_STATUSES.ITEM_CANCELLED &&
+                order?.statusId &&
+                (order.statusId == ORDER_STATUSES.ORDER_PENDING || order.statusId == ORDER_STATUSES.ORDER_IN_PROGRESS);
+
+              return isPendingReview || isCancelledWithValidOrder;
+            },
             action: (row) => {
               this.$alert.info({
                 mode: 'modal',
@@ -342,11 +347,44 @@ export default {
             }
           },
           {
+            icon: 'fa-light fa-clock', // Icono que representa espera
+            name: 'pendingItem',
+            color: 'orange',
+            label: this.$tr('iorder.cms.label.pendingItem'),
+            vIf: ({ statusId, order }) => {
+              const isPendingReview = statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW;
+              const isCancelledWithValidOrder =
+                statusId == ITEM_STATUSES.ITEM_CANCELLED &&
+                order?.statusId &&
+                (order.statusId == ORDER_STATUSES.ORDER_PENDING || order.statusId == ORDER_STATUSES.ORDER_IN_PROGRESS);
+
+              return isPendingReview || isCancelledWithValidOrder;
+            },
+            action: (row) => {
+              this.$alert.info({
+                mode: 'modal',
+                title: `ID: ${row.id} - ${row.title} `,
+                message: this.$tr('iorder.cms.label.pendingMessage'),
+                actions: [
+                  { label: this.$tr('isite.cms.label.cancel'), color: 'grey' },
+                  {
+                    label: this.$tr('iorder.cms.label.pendingItem'),
+                    color: 'orange',
+                    handler: () => {
+                      row.statusId = ITEM_STATUSES.ITEM_PENDING;
+                      this.updateRow(row);
+                    }
+                  }
+                ]
+              });
+            }
+          },
+          {
             icon: 'fa-light fa-circle-xmark',
             name: 'refuseItem',
             color: 'red',
             label: this.$tr('iorder.cms.label.refuseOrder'),
-            vIf: (row) => (row.statusId == ITEM_STATUSES.ITEM_PENDING || row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW ),
+            vIf: (row) => (row.statusId == ITEM_STATUSES.ITEM_PENDING || row.statusId == ITEM_STATUSES.ITEM_PENDING_REVIEW),
             action: (row) => {
               this.$alert.warning({
                 mode: 'modal',
