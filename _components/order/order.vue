@@ -11,11 +11,14 @@
           <div v-if="order.type" class="text-body1"><b>{{ $tr('isite.cms.form.type') }}:</b> {{ order.type.title }}</div>
           <div v-if="order.total > 0" class="text-body1"><b>{{ $tr('iorder.cms.form.total') }}:</b> ${{ order.total }}</div>
           <div v-if="order.createdAt" class="text-body2 q-mt-md"><b>{{ $tr('isite.cms.form.createdAt') }}:</b> {{ $trd(order.createdAt) }}</div>
-          <div v-if="order.external?.length" class="text-body2 q-mt-xs">
-            <b>{{ $tr('isite.cms.form.externalId') }}(Alegra):</b> {{ order.external[0]?.externalId }}
-          </div>
-          <div v-if="order.options?.externalCreatedAt" class="text-body2 q-mt-xs">
-            <b>{{ $tr('iorder.cms.label.externalCreatedAt') }}:</b> {{ $trd(order.options?.externalCreatedAt) }}
+          <div v-if="order.external" class="text-body2 q-mt-xs">
+            <q-separator/>
+            <div v-if="order.external.provider" class="text-subtitle1 q-my-xs">
+              <b>{{ order.external.provider.title }}</b>
+            </div>
+            <div><b>{{ $tr('isite.cms.form.externalId') }}:</b> {{ order.external.externalId }}</div>
+            <div v-if="order.external.options?.numberTemplate"><b>{{ $tr('iorder.cms.form.orderId') }}:</b> {{ order.external.options.numberTemplate.fullNumber }}</div>
+            <div><b>{{ $tr('iorder.cms.label.externalCreatedAt') }}:</b> {{ $trd(order.external.createdAt) }}</div>
           </div>
         </div>
       </div>
@@ -295,7 +298,7 @@ export default defineComponent({
     async getOrder() {
       this.loading = true
       const requestParams = {
-        params: {include: 'items.suppliers.supplier,external'},
+        params: {include: 'items.suppliers.supplier,external.provider'},
         refresh: true
       }
 
