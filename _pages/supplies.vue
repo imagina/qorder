@@ -24,7 +24,7 @@ export default {
 		});
 	},
 	data() {
-		return {			
+		return {
 			loading: false,
 			listConfig: {
 				apiRoute: 'apiRoutes.qorder.supplies',
@@ -51,13 +51,13 @@ export default {
 							{
 								name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
 							},
-							
+
 							{
 								name: 'title', label: this.$tr('isite.cms.form.product'), field: 'item',
-								align: 'left', 
+								align: 'left',
 								style: 'max-width: 250px;padding-top: 10px;font-family: Manrope;font-size: 15px;font-weight: 700;line-height: 20px;color: #0089FF',
 								format: (val) => val.title || '-',
-							},							
+							},
 
 							/* price */
 							{
@@ -65,7 +65,7 @@ export default {
 								icon: 'fa-solid fa-dollar',
 								format: val => `<span class="q-ml-md">$${val.price}</span>`
 							},
-							
+
 							/* providerPrice */
 							{
 								name: 'price', label: this.$tr('iorder.cms.form.supplierPrice'), field: 'price', align: 'center',
@@ -83,7 +83,7 @@ export default {
 								}
 							},
 
-							
+
 							/* requested quantity: */
 							{
 								name: 'requestedQuantity', label: this.$tr('iorder.cms.form.requestedQuantity'), field: 'item', align: 'center',
@@ -102,11 +102,10 @@ export default {
 										type: 'input',
 										props: {
 											label: `${this.$tr('iorder.cms.form.avaliableQuantity')}`,
-											type: 'number'
 										},
 									}
 								}
-							},							
+							},
 							/* comment */
 							{ name: 'comment', label: this.$tr('iorder.cms.form.observations'), field: 'comment', align: 'center',
 								icon: 'fa-regular fa-comment-dots',
@@ -116,15 +115,15 @@ export default {
 										vIf: row.statusId == SUPPLY_STATUSES.SUPPLY_PENDING,
 										type: 'input',
 										props: {
-											label: `${this.$tr('iorder.cms.form.observations')}`, 
+											label: `${this.$tr('iorder.cms.form.observations')}`,
 											autogrow: true
 										}
 									}
               	}
-							 }, 
+							 },
 							 /*status */
 							{
-								name: 'status', label: this.$tr('isite.cms.form.status'), field: 'status',								
+								name: 'status', label: this.$tr('isite.cms.form.status'), field: 'status',
 								align: 'left', style: 'max-width: 250px',
 								format: val => `<span class="${val.icon}" style="color: ${val.color}"></span>&nbsp;&nbsp;${val.title}`
 							},
@@ -134,7 +133,7 @@ export default {
 							},
 						],
 						actions: [
-              {               
+              {
                 name: 'refused',
                 label: this.$tr('iorder.cms.label.refuse'),
                 style: "width: 100px",
@@ -161,7 +160,7 @@ export default {
 									});
                 }
               },
-              {               
+              {
                 name: 'accepted',
                 label: this.$tr('iorder.cms.label.accept'),
                 style: "width: 100px",
@@ -260,7 +259,7 @@ export default {
                   id: item => `${item.id}`
                 }
               }
-            } 
+            }
 					},
 
 					help: {
@@ -268,22 +267,24 @@ export default {
 						description: this.$tr('iorder.cms.label.suppliesHelp')
 					}
 
-				}, 
+				},
 				//runs before update the row
 				beforeUpdate: ({ val, row}) => {
-					return new Promise((resolve, reject) => {						
+					return new Promise((resolve, reject) => {
 						let msgs = []
             /* price */
 						if (row.price < 1 ) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidPrice'));
 						/*quantity*/
-						if (row.quantity < 1 ) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidQuantity'));
-						if (row.quantity > row.item.quantity) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidAvaliableQuantity'));
+            if(!this.isValidDecimal(row.quantity)) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidQuantity'));
+            const quantity = this.normalizeQuantity(row.quantity)
+						if (quantity < 0) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidQuantity'));
+						//if (row.quantity > row.item.quantity) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidAvaliableQuantity'));
 
 						if(msgs.length) {
 							this.$alert.error({message: msgs.join(', ')});
 							return reject();
 						}
-
+            if(row.quantity.length) row.quantity = quantity
 						return resolve(row);
           });
         },
@@ -307,7 +308,20 @@ export default {
 		async updateRow(row){
 			this.$refs.dynamicList.updateRow(row)
 			await cache.remove({ allKey: 'apiRoutes.qorder.items' });
-		}
+		},
+    normalizeQuantity (qty) {
+      let quantity = qty;
+      if (typeof quantity === 'string') {
+        quantity = qty.replace(',', '.')
+      }
+
+      const value = parseFloat(quantity)
+      return isNaN(value) ? null : value
+    },
+
+    isValidDecimal (val) {
+      return /^-?\d+(\.\d{1,2})?$/.test(val.replace(',', '.'))
+    }
 	}
 };
 </script>
