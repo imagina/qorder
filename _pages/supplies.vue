@@ -46,7 +46,7 @@ export default {
 								style: 'max-width: 250px;font-family: Manrope;font-size: 13px;font-weight: 700;line-height: 20px;',
 							},
 							{
-								name: 'mainImage', field: 'item.extraData.mediaFiles.mainimage.url',
+								name: 'mainImage', field: 'item.entity.mediaFiles.mainimage.url',
 							},
 							{
 								name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
@@ -188,7 +188,7 @@ export default {
             ],
 					},
 					requestParams: {
-						include: 'item',
+						include: 'item.entity.files',
 					},
 					filters: {
 						/*
