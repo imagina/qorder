@@ -320,7 +320,17 @@ export default {
     },
 
     isValidDecimal (val) {
-      return /^-?\d+(\.\d{1,2})?$/.test(val.replace(',', '.'))
+      let res = false;
+      const exp = /^-?\d+(\.\d{1,2})?$/;
+
+      if (typeof val === 'number') {
+        return exp.test(val.toString());
+      } else if (typeof val === 'string') {
+        const sanitized = val.replace(',', '.').trim();
+        return exp.test(sanitized);
+      }
+
+      return res
     }
 	}
 };
