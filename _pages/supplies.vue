@@ -2,7 +2,8 @@
 	<div>
 		<!-- orders --->
 		<div class="q-px-md">
-			<dynamicList ref="dynamicList" :listConfig="listConfig" @new="() => $refs.crudComponent.create()">
+			<dynamicList ref="dynamicList" :listConfig="listConfig" @new="() => $refs.crudComponent.create()"
+        @updatedRow="() => $refs.dynamicList.getData(false, true)">
 			</dynamicList>
 		</div>
 	</div>
@@ -48,6 +49,12 @@ export default {
 							{
 								name: 'mainImage', field: 'item.entity.mediaFiles.mainimage.url',
 							},
+              /*
+              {
+								name: 'id', label: this.$tr('isite.cms.form.id'), field: row => row, style: '',
+                format: (val) => `${val.id}<br /><b>Total solicitado:</b> ${val.item.price * val.item.quantity}<br /><b>Total Proveedor</b>: ${val.price * val.quantity}`
+							},
+              */
 							{
 								name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
 							},
@@ -127,6 +134,16 @@ export default {
 								align: 'left', style: 'max-width: 250px',
 								format: val => `<span class="${val.icon}" style="color: ${val.color}"></span>&nbsp;&nbsp;${val.title}`
 							},
+              /*Total*/
+              {
+                name: 'supplyTotal', label: 'Total Producto', field: 'supplyTotal', align: 'left'
+              },
+              /*Total Order*/
+              {
+                name: 'orderTotal', label: 'Total Orden', field: 'item', align: 'left',
+                format: val => val?.order?.supplyTotal || 0
+              },
+
 							{
 								name: 'createdAt', label: this.$tr('isite.cms.form.createdAt'), field: 'createdAt', style: '',
 								format: val => this.$trd(val)
@@ -188,7 +205,7 @@ export default {
             ],
 					},
 					requestParams: {
-						include: 'item.entity.files',
+						include: 'item.entity.files,item.order',
 					},
 					filters: {
 						/*
