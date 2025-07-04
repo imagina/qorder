@@ -5,7 +5,7 @@ export default {
         "adminGroup": "Órdenes",
         "adminOrders": "Órdenes",
         "adminSupplies": "Suministros",
-      },      
+      },
       "label": {
         "refuse": "Rechazar",
         "refuseOrder": "Rechazar Orden",
@@ -31,7 +31,9 @@ export default {
           "invalidPrice": "Ingrese un precio valido.",
           "invalidQuantity": "Ingrese una cantidad valida.",
           "invalidAvaliableQuantity": "La cantidad de unidades disponibles debe ser menor a la solicitada."
-        }
+        },
+        "totalProd": "Total del producto",
+        "totalOrder": "Total de la orden"
       },
       "orderManagement": "Órdenes",
       "suppliesManagement": "Suministros",

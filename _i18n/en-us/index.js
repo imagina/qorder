@@ -31,7 +31,9 @@ export default {
           "invalidPrice": "Enter a valid price.",
           "invalidQuantity": "Enter a valid quantity.",
           "invalidAvaliableQuantity": "The number of available units must be less than the requested units."
-        }
+        },
+        "totalProd": "Product Total",
+        "totalOrder": "Order Total"
       },
       "orderManagement": "Orders",
       "suppliesManagement": "Supplies",

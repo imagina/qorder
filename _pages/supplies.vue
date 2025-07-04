@@ -2,7 +2,8 @@
 	<div>
 		<!-- orders --->
 		<div class="q-px-md">
-			<dynamicList ref="dynamicList" :listConfig="listConfig" @new="() => $refs.crudComponent.create()">
+			<dynamicList ref="dynamicList" :listConfig="listConfig" @new="() => $refs.crudComponent.create()"
+        @updatedRow="() => $refs.dynamicList.getData(false, true)">
 			</dynamicList>
 		</div>
 	</div>
@@ -127,6 +128,16 @@ export default {
 								align: 'left', style: 'max-width: 250px',
 								format: val => `<span class="${val.icon}" style="color: ${val.color}"></span>&nbsp;&nbsp;${val.title}`
 							},
+              /*Total*/
+              {
+                name: 'supplyTotal', label: this.$tr('iorder.cms.form.totalProd'), field: 'supplyTotal', align: 'left'
+              },
+              /*Total Order*/
+              {
+                name: 'orderTotal', label: this.$tr('iorder.cms.form.totalOrder'), field: 'item', align: 'left',
+                format: val => val?.order?.supplyTotal || 0
+              },
+
 							{
 								name: 'createdAt', label: this.$tr('isite.cms.form.createdAt'), field: 'createdAt', style: '',
 								format: val => this.$trd(val)
@@ -188,7 +199,7 @@ export default {
             ],
 					},
 					requestParams: {
-						include: 'item.entity.files',
+						include: 'item.entity.files,item.order',
 					},
 					filters: {
 						/*

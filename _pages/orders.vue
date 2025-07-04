@@ -188,8 +188,8 @@ export default {
               }
             },
             {
-              name: 'createdAt', label: this.$tr('isite.cms.form.createdAt'), field: 'createdAt', align: 'left',
-              format: val => val ? this.$trd(val, 'short') : '-'
+              name: 'order', label: this.$tr('isite.cms.form.createdAt'), field: 'order', align: 'left',
+              format: val => val.customCreatedAt ? this.$trd(val.customCreatedAt, 'short') : '-'
             },
             {
               name: 'updatedAt', label: this.$tr('isite.cms.form.updatedAt'), field: 'updatedAt', align: 'left',
@@ -267,7 +267,7 @@ export default {
               }
             },
 
-            date: {
+            customCreatedAt: {
               value: {},
               quickFilter: true,
               quickFilterClass: 'col',
@@ -276,7 +276,8 @@ export default {
                 label: this.$tr('isite.cms.form.date'),
                 clearable: true,
                 removeTime: true,
-                autoClose: true
+                autoClose: true,
+                field: 'custom_created_at'
               }
             },
 
