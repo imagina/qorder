@@ -49,12 +49,6 @@ export default {
 							{
 								name: 'mainImage', field: 'item.entity.mediaFiles.mainimage.url',
 							},
-              /*
-              {
-								name: 'id', label: this.$tr('isite.cms.form.id'), field: row => row, style: '',
-                format: (val) => `${val.id}<br /><b>Total solicitado:</b> ${val.item.price * val.item.quantity}<br /><b>Total Proveedor</b>: ${val.price * val.quantity}`
-							},
-              */
 							{
 								name: 'id', label: this.$tr('isite.cms.form.id'), field: 'id', style: '',
 							},
@@ -136,11 +130,11 @@ export default {
 							},
               /*Total*/
               {
-                name: 'supplyTotal', label: 'Total Producto', field: 'supplyTotal', align: 'left'
+                name: 'supplyTotal', label: this.$tr('iorder.cms.form.totalProd'), field: 'supplyTotal', align: 'left'
               },
               /*Total Order*/
               {
-                name: 'orderTotal', label: 'Total Orden', field: 'item', align: 'left',
+                name: 'orderTotal', label: this.$tr('iorder.cms.form.totalOrder'), field: 'item', align: 'left',
                 format: val => val?.order?.supplyTotal || 0
               },
 
