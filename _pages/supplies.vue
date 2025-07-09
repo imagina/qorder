@@ -139,8 +139,8 @@ export default {
               },
 
 							{
-								name: 'createdAt', label: this.$tr('isite.cms.form.createdAt'), field: 'createdAt', style: '',
-								format: val => this.$trd(val)
+								name: 'customCreatedAt', label: this.$tr('isite.cms.form.date'), field: 'item', style: '',
+								format: val => val?.order?.customCreatedAt ? this.$trd(val.order.customCreatedAt) : '-'
 							},
 						],
 						actions: [

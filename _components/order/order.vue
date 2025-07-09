@@ -10,7 +10,12 @@
           </div>
           <div v-if="order.type" class="text-body1"><b>{{ $tr('isite.cms.form.type') }}:</b> {{ order.type.title }}</div>
           <div v-if="order.total > 0" class="text-body1"><b>{{ $tr('iorder.cms.form.total') }}:</b> ${{ order.total }}</div>
-          <div v-if="order.createdAt" class="text-body2 q-mt-md"><b>{{ $tr('isite.cms.form.createdAt') }}:</b> {{ $trd(order.createdAt) }}</div>
+          <div v-if="order.supplyTotal > 0" class="text-body1"><b>{{ $tr('iorder.cms.form.totalOrder') }}:</b> $ {{ order.supplyTotal }}</div>
+
+          <div v-if="order.customCreatedAt" class="text-body2 q-mt-md"><b>{{ $tr('isite.cms.form.date') }}:</b> {{ $trd(order.customCreatedAt) }}</div>
+          <div v-else-if="order.createdAt" class="text-body2 q-mt-md"><b>{{ $tr('isite.cms.form.createdAt') }}:</b> {{ $trd(order.createdAt) }}</div>
+
+
           <div v-if="order.external" class="text-body2 q-mt-xs">
             <q-separator/>
             <div v-if="order.external.provider" class="text-subtitle1 q-my-xs">
@@ -224,14 +229,15 @@ export default defineComponent({
               }
             },
             {
-              name: 'createdAt', label: this.$tr('isite.cms.form.createdAt'), field: 'createdAt', align: 'left',
-              format: val => val ? this.$trd(val, 'short') : '-'
-            },
-            {
-              name: 'updatedAt', label: this.$tr('isite.cms.form.updatedAt'), field: 'updatedAt', align: 'left',
-              format: val => val ? this.$trd(val, 'short') : '-'
+              name: 'supplyTotal', label: this.$tr('iorder.cms.form.totalProd'), field: 'suppliers', align: 'center',
+              format: (val) => {
+                const result = []
+                val.forEach(item => {
+                  if(item.supplyTotal) result.push(`$ ${item.supplyTotal}`)
+                });
+                return result.join(', ')
+              }
             }
-
           ],
           rows: this.order?.items || []
         }
