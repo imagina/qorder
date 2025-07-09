@@ -188,7 +188,17 @@ export default {
               }
             },
             {
-              name: 'order', label: this.$tr('isite.cms.form.createdAt'), field: 'order', align: 'left',
+              name: 'supplyTotal', label: this.$tr('iorder.cms.form.totalProd'), field: 'suppliers', align: 'center',
+              format: (val) => {
+                const result = []
+                val.forEach(item => {
+                  if(item.supplyTotal) result.push(`$ ${item.supplyTotal}`)
+                });
+                return result.join(', ')
+              }
+            },
+            {
+              name: 'customCreatedAt', label: this.$tr('isite.cms.form.date'), field: 'order', align: 'center',
               format: val => val.customCreatedAt ? this.$trd(val.customCreatedAt, 'short') : '-'
             },
             {
