@@ -225,10 +225,12 @@ export default {
               quickFilterClass: 'col',
               props: {
                 label: this.$tr('iorder.cms.form.order'),
+                useInput: true,
                 clearable: true,
               },
               loadOptions: {
                 apiRoute: 'apiRoutes.qorder.orders',
+                filterByQuery: true,
                 select: {
                   label: item => `${this.$tr('iorder.cms.form.orderId')} ${item.id}`,
                   id: item => `${item.id}`
