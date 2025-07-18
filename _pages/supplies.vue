@@ -228,9 +228,11 @@ export default {
               props: {
                 label: this.$tr('iorder.cms.form.orderId'),
                 clearable: true,
+                useInput: true,
               },
               loadOptions: {
                 apiRoute: 'apiRoutes.qorder.orders',
+                filterByQuery: true,
                 select: {
                   label: item => `${this.$tr('iorder.cms.form.orderId')} ${item.id}`,
                   id: item => `${item.id}`
