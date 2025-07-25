@@ -284,6 +284,7 @@ export default {
 				//runs before update the row
 				beforeUpdate: ({ val, row}) => {
 					return new Promise((resolve, reject) => {
+						row.skipRowUpdate = true
 						let msgs = []
             /* price */
 						if (row.price < 1 ) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidPrice'));
