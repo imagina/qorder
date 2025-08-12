@@ -77,8 +77,7 @@ export default {
 										vIf: row.statusId == SUPPLY_STATUSES.SUPPLY_PENDING,
 										type: 'input',
 										props: {
-											label: `${this.$tr('iorder.cms.form.supplierPrice')}`,
-											type: 'number'
+											label: `${this.$tr('iorder.cms.form.supplierPrice')}`
 										},
 									}
 								}
@@ -287,7 +286,9 @@ export default {
 						row.skipRowUpdate = true
 						let msgs = []
             /* price */
-						if (row.price < 1 ) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidPrice'));
+			if(!this.isValidDecimal(row.price)) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidPrice'));
+            const price = this.normalizeQuantity(row.price)
+						if (price < 1 ) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidPrice'));
 						/*quantity*/
             if(!this.isValidDecimal(row.quantity)) msgs.push(this.$tr('iorder.cms.form.beforeUpdate.invalidQuantity'));
             const quantity = this.normalizeQuantity(row.quantity)
@@ -299,6 +300,7 @@ export default {
 							return reject();
 						}
             if(row.quantity.length) row.quantity = quantity
+			if(row.price.length) row.price = price
 						return resolve(row);
           });
         },
