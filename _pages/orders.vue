@@ -214,7 +214,7 @@ export default {
           requestParams: {
             include: 'suppliers.supplier,order',
             filter: {
-              entityType: "Modules\\Iproduct\\Entities\\Product"
+              entityType: "Modules\\Iproduct\\Models\\Product"
             }
           },
           filters: {
