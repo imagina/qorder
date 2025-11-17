@@ -238,7 +238,7 @@ export default {
                 }
               }
             },
-            date: {
+            customCreatedAt: {
               value: {},
               quickFilter: true,
               type: 'dateRange',
@@ -246,7 +246,8 @@ export default {
                 label: this.$tr('isite.cms.form.date'),
                 clearable: true,
                 removeTime: true,
-                autoClose: true
+                autoClose: true,
+                field: 'custom_created_at'
               }
             },
 
